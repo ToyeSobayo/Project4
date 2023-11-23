@@ -1,6 +1,6 @@
-package com.example.pizzaparty.Controllers;
+package Controllers;
 
-import com.example.pizzaparty.Controllers.MainMenuController;
+import Controllers.MainMenuController;
 import com.example.pizzaparty.MainApplication;
 import com.example.pizzaparty.Order;
 import com.example.pizzaparty.Pizza;

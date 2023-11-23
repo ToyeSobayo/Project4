@@ -1,39 +1,36 @@
 package com.example.pizzaparty;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PizzaMessAround {
-    public static void main(String[] args) {
-        // Creating a Deluxe pizza
-        Pizza deluxePizza = new Deluxe();
-        deluxePizza.setSauce(Sauce.TOMATO);
-        deluxePizza.setSize(Size.LARGE);
+    public static void main(String [] args){
+        Pizza pizza = new Deluxe();
+        pizza.setSauce(Sauce.TOMATO);
+        pizza.setSize(Size.LARGE);
 
-        // Creating an order with the Deluxe pizza
-        Order orderDeluxe = new Order(new ArrayList<>(List.of(deluxePizza)));
+        Pizza pizza2 = new Supreme();
+        pizza2.setSauce(Sauce.TOMATO);
+        pizza2.setSize(Size.MEDIUM);
 
-        // Creating a Supreme pizza
-        Pizza supremePizza = new Supreme();
-        supremePizza.setSauce(Sauce.TOMATO);
-        supremePizza.setSize(Size.MEDIUM);
+        ArrayList <Pizza> pizzas = new ArrayList<>();
+        pizzas.add(pizza);
 
-        // Creating a Meatzza pizza
-        Pizza meatzzaPizza = new Meatzza();
-        meatzzaPizza.setSauce(Sauce.ALFREDO);
-        meatzzaPizza.setSize(Size.SMALL);
+        Order order = new Order(pizzas);
 
-        // Creating an order with the Meatzza pizza
-        Order orderMeatzza = new Order(new ArrayList<>(List.of(meatzzaPizza)));
+        Pizza pizza3 = new Meatzza();
+        pizza3.setSauce(Sauce.ALFREDO);
+        pizza3.setSize(Size.SMALL);
+        ArrayList <Pizza> pizzas1 = new ArrayList<>();
+        pizzas1.add(pizza3);
 
-        // Managing orders in the store
-        StoreOrders storeOrders = new StoreOrders(new ArrayList<>());
-        storeOrders.add(orderDeluxe);
-        storeOrders.add(orderMeatzza);
+        Order order1 = new Order(pizzas1);
 
-        // Uncomment to print store orders
-        // System.out.println(storeOrders.toString());
+        StoreOrders storeOrders = new StoreOrders(new ArrayList<Order>());
+        storeOrders.add(order);
+        storeOrders.add(order1);
 
-        // Printing a specific order
-        System.out.println(orderMeatzza.toString());
+        //System.out.println(storeOrders.toString());
+        System.out.println(order1.toString());
     }
 }

@@ -1,60 +1,70 @@
 package com.example.pizzaparty;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Order {
-    private List<Pizza> pizzas;
+    private ArrayList <Pizza> pizzas;
     private int orderNumber;
     public static final double SALES_TAX = 0.06625;
-    private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    public Order(List<Pizza> pizzas) {
+    public Order(ArrayList <Pizza> pizzas){
         this.pizzas = pizzas;
     }
 
-    public void addPizza(Pizza pizza) {
-        pizzas.add(pizza);
+    public void add(Pizza pizza){
+        this.pizzas.add(pizza);
     }
 
-    public void removePizza(Pizza pizza) {
-        pizzas.remove(pizza);
+    public void remove(Pizza pizza){
+        this.pizzas.remove(pizza);
     }
 
-    public int getOrderNumber() {
-        return orderNumber;
+    public int getOrderNumber(){
+        return this.orderNumber;
     }
 
-    public void setOrderNumber(int newOrderNumber) {
-        this.orderNumber = newOrderNumber;
+    public void setOrderNumber(int orderNumber){
+        this.orderNumber = orderNumber;
     }
 
     @Override
-    public String toString() {
-        String pizzaDetails = pizzas.stream()
-                .map(Pizza::toString)
-                .collect(Collectors.joining("\n"));
-        return String.format("%s\n\nOrder total: $%.2f\n", pizzaDetails, getTotalPriceWithSalesTax());
+    public String toString(){
+        String res = "";
+        for(int i = 0; i < this.pizzas.size(); i ++){
+            if(i==this.pizzas.size()-1){
+                res += this.pizzas.get(i).toString();
+            }
+            else {
+                res += this.pizzas.get(i).toString() + "\n";
+            }
+        }
+        res += "\n";
+        res += "Order total: $" + String.valueOf(getTotalPriceWithSalesTax()) + "\n";
+        return res;
     }
 
-    public double getTotalPriceWithoutTax() {
-        return Double.parseDouble(df.format(pizzas.stream().mapToDouble(Pizza::price).sum()));
+    public double getTotalPriceWithoutTax(){
+        double total = 0.0;
+        for(int i = 0; i < this.pizzas.size(); i ++){
+            total += this.pizzas.get(i).price();
+        }
+        return Double.parseDouble(decimalFormat.format(total));
     }
 
-    public double getTotalPriceWithSalesTax() {
-        double totalWithoutTax = getTotalPriceWithoutTax();
-        return Double.parseDouble(df.format(totalWithoutTax * (1 + SALES_TAX)));
+    public double getTotalPriceWithSalesTax(){
+        return Double.parseDouble(decimalFormat.format(getTotalPriceWithoutTax() + (getTotalPriceWithoutTax() * SALES_TAX)));
     }
 
-    public double getSalesTaxOfTotal() {
-        return Double.parseDouble(df.format(getTotalPriceWithoutTax() * SALES_TAX));
+    public double getSalesTaxOfTotal(){
+        return Double.parseDouble(decimalFormat.format(getTotalPriceWithoutTax() * SALES_TAX));
     }
 
-    public List<Pizza> getPizzas() {
+    public ArrayList <Pizza> getPizzaList(){
         return this.pizzas;
     }
 
-    public void setPizzas(List<Pizza> newPizzas) {
-        this.pizzas = newPizzas;
+    public void setPizzasList(ArrayList <Pizza> newList){
+        this.pizzas = newList;
     }
 }

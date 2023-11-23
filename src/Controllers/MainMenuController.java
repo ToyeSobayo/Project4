@@ -1,4 +1,4 @@
-package com.example.pizzaparty.Controllers;
+package Controllers;
 
 import com.example.pizzaparty.MainApplication;
 import com.example.pizzaparty.Order;

@@ -1,59 +1,66 @@
 package com.example.pizzaparty;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-public class CustomPizza extends Pizza {
+public class BuildYourOwn extends Pizza {
 
-    private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    public CustomPizza() {
-        toppingsIncrement = 0.0;
-        extraSauce = false;
-        extraCheese = false;
+    public BuildYourOwn(){
+        this.toppingsIncrement = 0.0;
+        this.extraSauce = false;
+        this.extraCheese = false;
     }
 
     @Override
-    public double calculateSizePrice() {
-        switch (this.size) {
-            case SMALL:
-                return 8.99;
-            case MEDIUM:
-                return 10.99;
-            default:
-                return 12.99;
+    public double getSizePrice(){
+        if(this.size == Size.SMALL) {
+            return 8.99;
+        }
+        else if(this.size == Size.MEDIUM) {
+            return 10.99;
+        }
+        else{
+            return 12.99;
         }
     }
 
     @Override
-    public double calculatePrice() {
-        return Double.parseDouble(df.format(calculateSizePrice() + calculateCheesePrice() + calculateSaucePrice() + toppingsIncrement));
+    public double price(){
+        return Double.parseDouble(decimalFormat.format(getSizePrice() + extraCheeseAmount() + extraSauceAmount() + getToppingsIncrement()));
     }
 
     @Override
-    public String listToppings() {
-        if (this.toppings == null || this.toppings.isEmpty()) {
+    public String getToppingsAsString(){
+        String toppingsAsString = "";
+
+        if(this.toppings == null) {
             return "";
         }
-        List<String> toppingNames = new ArrayList<>();
-        for (Topping topping : this.toppings) {
-            toppingNames.add(topping.toString());
+
+        for(int i = 0; i < this.toppings.size(); i ++){
+            if(i == this.toppings.size()-1) {
+                toppingsAsString += this.toppings.get(i).toString();
+            }
+            else {
+                toppingsAsString += this.toppings.get(i).toString() + ", ";
+            }
         }
-        return String.join(", ", toppingNames);
+        return toppingsAsString;
     }
 
     @Override
-    public ArrayList<Topping> getToppings() {
+    public ArrayList<Topping> getToppings(){
         return this.toppings;
     }
 
     @Override
-    public String toString() {
-        String base = "[Custom Pizza][" + getSizeAsString() + "][" + getSauceAsString() + "]: ";
-        String toppingList = listToppings();
-        String cheese = extraCheeseString().replace(",", "");
-        String sauce = extraSauceString().replace(",", "");
-        String priceString = ": $" + calculatePrice();
-        return base + toppingList + (extraCheese || extraSauce ? cheese + sauce : "") + priceString;
+    public String toString(){
+        if(this.extraCheese == false || this.extraSauce == false){
+            return "[Build Your Own]" + "[" + getSizeAsString() + "]" + "[" + getSauceAsString() + "]: " + getToppingsAsString() + extraCheeseString().replace(",","") + extraSauceString().replace(",","") + ": " + "$" + price();
+        }
+        return "[Build Your Own]" + "[" + getSizeAsString() + "]" + "[" + getSauceAsString() + "]: " + getToppingsAsString() + extraCheeseString() + extraSauceString() + ": " + "$" + price();
     }
 }

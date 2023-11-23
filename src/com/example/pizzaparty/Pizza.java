@@ -1,99 +1,123 @@
 package com.example.pizzaparty;
 
-import java.util.List;
-import java.util.Objects;
+
+
+import java.util.*;
 
 public abstract class Pizza {
-    protected List<Topping> toppings;
+    protected ArrayList <Topping> toppings;
     protected Size size;
     protected Sauce sauce;
-    protected double toppingsPriceIncrement;
-    protected boolean hasExtraSauce;
-    protected boolean hasExtraCheese;
+    protected double toppingsIncrement;
+    protected boolean extraSauce;
+    protected boolean extraCheese;
 
     public abstract double price();
 
     public abstract double getSizePrice();
 
-    public abstract String formatToppings();
+    public abstract String getToppingsAsString();
 
-    public abstract List<Topping> getToppings();
+    public abstract ArrayList<Topping> getToppings();
 
-    public void setToppings(List<Topping> newToppings) {
-        this.toppings = newToppings;
+    public void setToppings(ArrayList <Topping> toppings){
+        this.toppings = toppings;
     }
 
-    public double getExtraCheesePrice() {
-        return hasExtraCheese ? 1.00 : 0.0;
+    public double extraCheeseAmount(){
+        if(extraCheese){
+            return 1.00;
+        }
+        else{
+            return 0.0;
+        }
     }
 
-    public double getExtraSaucePrice() {
-        return hasExtraSauce ? 1.00 : 0.0;
+    public double extraSauceAmount(){
+        if(extraSauce){
+            return 1.00;
+        }
+        else{
+            return 0.0;
+        }
     }
 
-    public String getExtraCheeseString() {
-        return hasExtraCheese ? ", Extra cheese" : "";
+    public String extraCheeseString(){
+        if(extraCheese){
+            return ", Extra cheese ";
+        }
+        else{
+            return "";
+        }
     }
 
-    public String getExtraSauceString() {
-        return hasExtraSauce ? ", Extra sauce" : "";
+    public String extraSauceString(){
+        if(extraSauce){
+            return ", Extra sauce";
+        }
+        else{
+            return "";
+        }
     }
 
-    public void increaseToppingsPrice() {
-        toppingsPriceIncrement += 1.49;
+    public void incrementToppingsAmount(){
+        this.toppingsIncrement += 1.49;
     }
 
-    public void decreaseToppingsPrice() {
-        toppingsPriceIncrement -= 1.49;
+    public void decrementToppingsAmount(){
+        this.toppingsIncrement -= 1.49;
     }
 
-    public double getToppingsPriceIncrement() {
-        return toppingsPriceIncrement;
+    public double getToppingsIncrement(){
+        return this.toppingsIncrement;
     }
 
-    public void setSize(Size newSize) {
-        this.size = newSize;
+    public void setSize(Size size) {
+        this.size = size;
     }
 
-    public void setSauce(Sauce newSauce) {
-        this.sauce = newSauce;
+    public void setSauce(Sauce sauce) {
+        this.sauce = sauce;
     }
 
-    public void toggleExtraSauce() {
-        hasExtraSauce = !hasExtraSauce;
+    public void addExtraSauce(){
+        extraSauce = true;
     }
 
-    public void toggleExtraCheese() {
-        hasExtraCheese = !hasExtraCheese;
+    public void removeExtraSauce(){
+        extraSauce = false;
     }
 
-    public Size getSize() {
-        return size;
+    public void addExtraCheese(){
+        extraCheese = true;
     }
 
-    public Sauce getSauce() {
-        return sauce;
+    public void removeExtraCheese(){
+        extraCheese = false;
     }
 
-    public String getSizeAsString() {
-        return size.toString();
+    public Size getSize(){
+        return this.size;
     }
 
-    public String getSauceAsString() {
-        return sauce.toString();
+    public Sauce getSauce(){
+        return this.sauce;
+    }
+
+    public String getSizeAsString(){
+        return this.size.toString();
+    }
+
+    public String getSauceAsString(){
+        return this.sauce.toString();
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Pizza) {
-            Pizza otherPizza = (Pizza) obj;
-            return toppings.equals(otherPizza.getToppings()) && Double.compare(price(), otherPizza.price()) == 0;
+            Pizza pizza = (Pizza) obj;
+            return this.getToppings().equals(pizza.getToppings()) && this.price() == pizza.price();
         }
         return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(toppings, size, sauce, toppingsPriceIncrement, hasExtraSauce, hasExtraCheese);
     }
 }

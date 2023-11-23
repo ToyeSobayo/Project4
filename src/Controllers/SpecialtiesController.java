@@ -1,7 +1,7 @@
-package com.example.pizzaparty.Controllers;
+package Controllers;
 
 import com.example.pizzaparty.*;
-import com.example.pizzaparty.Controllers.MainMenuController;
+import Controllers.MainMenuController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

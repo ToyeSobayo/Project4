@@ -5,66 +5,94 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class StoreOrders {
-    private List<Order> orders;
-    private int currentOrderNumber;
+    private ArrayList <Order> orders;
+    private int currOrderNumber;
+    private static int nextOrderNumber;
 
-    public StoreOrders() {
-        this.orders = new ArrayList<>();
-        this.currentOrderNumber = 1;
+    public StoreOrders(){}
+
+    public StoreOrders(ArrayList <Order> orders){
+        this.currOrderNumber = 1;
+        this.orders = orders;
     }
 
-    public StoreOrders(List<Order> orders) {
-        this.orders = new ArrayList<>(orders);
-        this.currentOrderNumber = 1;
-    }
-
-    public void addOrder(Order order) {
-        order.setOrderNumber(currentOrderNumber++);
+    public void add(Order order){
+        order.setOrderNumber(this.currOrderNumber);
         this.orders.add(order);
+        this.incrementOrderNumber();
     }
 
-    public boolean removeOrder(Order order) {
-        return orders.removeIf(o -> o.getOrderNumber() == order.getOrderNumber());
+    public void remove(Order order){
+        int indexToRemove = 0;
+        for(int i = 0; i < this.orders.size(); i ++){
+            if(this.orders.get(i).getOrderNumber() == order.getOrderNumber()){
+                indexToRemove = i;
+            }
+        }
+        this.orders.remove(indexToRemove);
+        decrementOrderNumber();
     }
 
-    public int getNextOrderNumber() {
-        return orders.stream()
-                .mapToInt(Order::getOrderNumber)
-                .max()
-                .orElse(0) + 1;
+    public void decrementOrderNumber(){
+        this.currOrderNumber --;
     }
 
-    public void exportOrders() {
+    public int getNextOrderNumber(){
+        int maxOrderNumber = -1;
+        for(int i = 0; i < this.orders.size(); i ++){
+            if(this.orders.get(i).getOrderNumber() > maxOrderNumber){
+                maxOrderNumber = this.orders.get(i).getOrderNumber();
+            }
+        }
+        return maxOrderNumber+1;
+    }
+
+    public void export(){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Order File");
+        fileChooser.setTitle("Save File");
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
                 writer.println(this);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    public List<Order> getOrders() {
-        return new ArrayList<>(this.orders);
+    public void incrementOrderNumber(){
+        this.currOrderNumber ++;
+    }
+
+    public void resetOrderNumber(){
+        this.currOrderNumber = 1;
+    }
+
+    public ArrayList <Order> getOrders(){
+        return this.orders;
     }
 
     @Override
-    public String toString() {
-        StringBuilder res = new StringBuilder();
-        for (Order order : this.orders) {
-            res.append("Order number ").append(order.getOrderNumber()).append("\n").append(order).append("\n");
+    public String toString(){
+        String res = "";
+        for(int i = 0; i < this.orders.size(); i ++){
+            if(i == this.orders.size()-1) {
+                res += "Order number " + this.orders.get(i).getOrderNumber() + "\n";
+                res += this.orders.get(i).toString();
+            }
+            else {
+                res += "Order number " + this.orders.get(i).getOrderNumber() + "\n";
+                res += this.orders.get(i).toString() + "\n";
+            }
         }
-        return res.toString();
+        return res;
     }
 
-    public void setOrders(List<Order> newOrders) {
-        this.orders = new ArrayList<>(newOrders);
+    public void setOrders(ArrayList <Order> newOrders){
+        this.orders = newOrders;
     }
 }

@@ -1,44 +1,56 @@
 package com.example.pizzaparty;
 
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Seafood extends Pizza {
-    private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public Seafood() {
-        toppings = List.of(Topping.SHRIMP, Topping.SQUID, Topping.CRABMEATS);
-        sauce = Sauce.ALFREDO;
+        this.toppings = new ArrayList<>(Arrays.asList(Topping.SHRIMP,Topping.SQUID,Topping.CRABMEATS));
+        this.sauce = Sauce.ALFREDO;
     }
 
     @Override
-    public double calculateSizePrice() {
-        return switch (this.size) {
-            case SMALL -> 17.99;
-            case MEDIUM -> 19.99;
-            default -> 21.99;
-        };
+    public double getSizePrice(){
+        if(this.size == Size.SMALL) {
+            return 17.99;
+        }
+        else if(this.size == Size.MEDIUM) {
+            return 19.99;
+        }
+        else{
+            return 21.99;
+        }
     }
 
     @Override
-    public double calculatePrice() {
-        return Double.parseDouble(df.format(calculateSizePrice() + calculateCheesePrice() + calculateSaucePrice()));
+    public double price(){
+        return Double.parseDouble(decimalFormat.format(getSizePrice() + extraCheeseAmount() + extraSauceAmount()));
     }
 
     @Override
-    public String formatToppings() {
-        return toppings.stream().map(Topping::toString).collect(Collectors.joining(", "));
+    public String getToppingsAsString(){
+        String toppingsAsString = "";
+        for(int i = 0; i < this.toppings.size(); i ++){
+            if(i == this.toppings.size()-1) {
+                toppingsAsString += this.toppings.get(i).toString();
+            }
+            else {
+                toppingsAsString += this.toppings.get(i).toString() + ", ";
+            }
+        }
+        return toppingsAsString;
     }
 
     @Override
-    public List<Topping> getToppings() {
+    public ArrayList<Topping> getToppings(){
         return this.toppings;
     }
 
     @Override
-    public String toString() {
-        return String.format("[Seafood][%s][%s]: %s%s%s: $%.2f",
-                getSizeAsString(), getSauceAsString(), formatToppings(), getExtraCheeseString(), getExtraSauceString(), calculatePrice());
+    public String toString(){
+        return "[Seafood" +"]" + "[" + getSizeAsString() + "]" + "[" + getSauceAsString() + "]: " + getToppingsAsString() + extraCheeseString() + extraSauceString() + ": " + "$" + price();
     }
 }
