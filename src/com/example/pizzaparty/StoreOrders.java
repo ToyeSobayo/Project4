@@ -8,91 +8,61 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class StoreOrders {
-    private ArrayList <Order> orders;
+    private ArrayList<Order> orders;
     private int currOrderNumber;
     private static int nextOrderNumber;
 
-    public StoreOrders(){}
-
-    public StoreOrders(ArrayList <Order> orders){
+    public StoreOrders() {
+        this.orders = new ArrayList<>();
         this.currOrderNumber = 1;
-        this.orders = orders;
     }
 
-    public void add(Order order){
-        order.setOrderNumber(this.currOrderNumber);
+    public StoreOrders(ArrayList<Order> orders) {
+        this();
+        this.orders.addAll(orders);
+    }
+
+    public void add(Order order) {
+        order.setOrderNumber(this.currOrderNumber++);
         this.orders.add(order);
-        this.incrementOrderNumber();
     }
 
-    public void remove(Order order){
-        int indexToRemove = 0;
-        for(int i = 0; i < this.orders.size(); i ++){
-            if(this.orders.get(i).getOrderNumber() == order.getOrderNumber()){
-                indexToRemove = i;
-            }
-        }
-        this.orders.remove(indexToRemove);
-        decrementOrderNumber();
+    public void remove(Order order) {
+        this.orders.removeIf(o -> o.getOrderNumber() == order.getOrderNumber());
     }
 
-    public void decrementOrderNumber(){
-        this.currOrderNumber --;
+    public int getNextOrderNumber() {
+        return this.orders.stream().mapToInt(Order::getOrderNumber).max().orElse(0) + 1;
     }
 
-    public int getNextOrderNumber(){
-        int maxOrderNumber = -1;
-        for(int i = 0; i < this.orders.size(); i ++){
-            if(this.orders.get(i).getOrderNumber() > maxOrderNumber){
-                maxOrderNumber = this.orders.get(i).getOrderNumber();
-            }
-        }
-        return maxOrderNumber+1;
-    }
-
-    public void export(){
+    public void export() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save File");
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
                 writer.println(this);
-            }
-            catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Consider proper error handling
             }
         }
     }
 
-    public void incrementOrderNumber(){
-        this.currOrderNumber ++;
-    }
-
-    public void resetOrderNumber(){
-        this.currOrderNumber = 1;
-    }
-
-    public ArrayList <Order> getOrders(){
-        return this.orders;
+    public ArrayList<Order> getOrders() {
+        return new ArrayList<>(this.orders);
     }
 
     @Override
-    public String toString(){
-        String res = "";
-        for(int i = 0; i < this.orders.size(); i ++){
-            if(i == this.orders.size()-1) {
-                res += "Order number " + this.orders.get(i).getOrderNumber() + "\n";
-                res += this.orders.get(i).toString();
-            }
-            else {
-                res += "Order number " + this.orders.get(i).getOrderNumber() + "\n";
-                res += this.orders.get(i).toString() + "\n";
-            }
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        for (Order order : this.orders) {
+            res.append("Order number ").append(order.getOrderNumber()).append("\n")
+                    .append(order).append("\n");
         }
-        return res;
+        return res.toString();
     }
 
-    public void setOrders(ArrayList <Order> newOrders){
-        this.orders = newOrders;
+    public void setOrders(ArrayList<Order> newOrders) {
+        this.orders = new ArrayList<>(newOrders);
     }
 }

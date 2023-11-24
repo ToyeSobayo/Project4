@@ -3,13 +3,13 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class Order {
-    private ArrayList <Pizza> pizzas;
+    private ArrayList<Pizza> pizzas;
     private int orderNumber;
     public static final double SALES_TAX = 0.06625;
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    public Order(ArrayList <Pizza> pizzas){
-        this.pizzas = pizzas;
+    public Order(ArrayList<Pizza> pizzas){
+        this.pizzas = new ArrayList<>(pizzas);
     }
 
     public void add(Pizza pizza){
@@ -30,41 +30,34 @@ public class Order {
 
     @Override
     public String toString(){
-        String res = "";
-        for(int i = 0; i < this.pizzas.size(); i ++){
-            if(i==this.pizzas.size()-1){
-                res += this.pizzas.get(i).toString();
-            }
-            else {
-                res += this.pizzas.get(i).toString() + "\n";
-            }
-        }
-        res += "\n";
-        res += "Order total: $" + String.valueOf(getTotalPriceWithSalesTax()) + "\n";
-        return res;
+        StringJoiner joiner = new StringJoiner("\n");
+        pizzas.forEach(pizza -> joiner.add(pizza.toString()));
+        joiner.add("\nOrder total: $" + getTotalPriceWithSalesTax());
+        return joiner.toString();
     }
 
     public double getTotalPriceWithoutTax(){
         double total = 0.0;
-        for(int i = 0; i < this.pizzas.size(); i ++){
-            total += this.pizzas.get(i).price();
+        for(Pizza pizza : pizzas){
+            total += pizza.price();
         }
         return Double.parseDouble(decimalFormat.format(total));
     }
 
     public double getTotalPriceWithSalesTax(){
-        return Double.parseDouble(decimalFormat.format(getTotalPriceWithoutTax() + (getTotalPriceWithoutTax() * SALES_TAX)));
+        double totalPriceWithoutTax = getTotalPriceWithoutTax();
+        return Double.parseDouble(decimalFormat.format(totalPriceWithoutTax + (totalPriceWithoutTax * SALES_TAX)));
     }
 
     public double getSalesTaxOfTotal(){
         return Double.parseDouble(decimalFormat.format(getTotalPriceWithoutTax() * SALES_TAX));
     }
 
-    public ArrayList <Pizza> getPizzaList(){
-        return this.pizzas;
+    public ArrayList<Pizza> getPizzaList(){
+        return new ArrayList<>(this.pizzas);
     }
 
-    public void setPizzasList(ArrayList <Pizza> newList){
-        this.pizzas = newList;
+    public void setPizzasList(ArrayList<Pizza> newList){
+        this.pizzas = new ArrayList<>(newList);
     }
 }

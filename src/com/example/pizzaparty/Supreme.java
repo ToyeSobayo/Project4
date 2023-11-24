@@ -3,55 +3,46 @@ package com.example.pizzaparty;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 public class Supreme extends Pizza {
-
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public Supreme() {
-        this.toppings = new ArrayList<>(Arrays.asList(Topping.SAUSAGE,Topping.PEPPERONI,Topping.HAM,Topping.GREENPEPPER,Topping.ONION,Topping.BLACKOLIVE,Topping.MUSHROOM));
+        this.toppings = new ArrayList<>(Arrays.asList(Topping.SAUSAGE, Topping.PEPPERONI, Topping.HAM, Topping.GREENPEPPER, Topping.ONION, Topping.BLACKOLIVE, Topping.MUSHROOM));
         this.sauce = Sauce.TOMATO;
     }
 
     @Override
-    public double getSizePrice(){
-        if(this.size == Size.SMALL) {
-            return 15.99;
-        }
-        else if(this.size == Size.MEDIUM) {
-            return 17.99;
-        }
-        else{
-            return 19.99;
+    public double getSizePrice() {
+        switch (this.size) {
+            case SMALL: return 15.99;
+            case MEDIUM: return 17.99;
+            default: return 19.99;
         }
     }
 
     @Override
-    public double price(){
+    public double price() {
         return Double.parseDouble(decimalFormat.format(getSizePrice() + extraCheeseAmount() + extraSauceAmount()));
     }
 
     @Override
-    public String getToppingsAsString(){
-        String toppingsAsString = "";
-        for(int i = 0; i < this.toppings.size(); i ++){
-            if(i == this.toppings.size()-1) {
-                toppingsAsString += this.toppings.get(i).toString();
-            }
-            else {
-                toppingsAsString += this.toppings.get(i).toString() + ", ";
-            }
+    public String getToppingsAsString() {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (Topping topping : this.toppings) {
+            joiner.add(topping.toString());
         }
-        return toppingsAsString;
+        return joiner.toString();
     }
 
     @Override
-    public ArrayList<Topping> getToppings(){
+    public ArrayList<Topping> getToppings() {
         return this.toppings;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "[Supreme]" + "[" + getSizeAsString() + "]" + "[" + getSauceAsString() + "]: " + getToppingsAsString() + extraCheeseString() + extraSauceString() + ": " + "$" + price();
     }
 }

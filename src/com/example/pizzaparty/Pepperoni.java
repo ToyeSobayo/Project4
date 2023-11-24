@@ -3,6 +3,7 @@ package com.example.pizzaparty;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 public class Pepperoni extends Pizza {
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -13,44 +14,35 @@ public class Pepperoni extends Pizza {
     }
 
     @Override
-    public double getSizePrice(){
-        if(this.size == Size.SMALL) {
-            return 10.99;
-        }
-        else if(this.size == Size.MEDIUM) {
-            return 12.99;
-        }
-        else{
-            return 14.99;
+    public double getSizePrice() {
+        switch (this.size) {
+            case SMALL: return 10.99;
+            case MEDIUM: return 12.99;
+            default: return 14.99;
         }
     }
 
     @Override
-    public double price(){
+    public double price() {
         return Double.parseDouble(decimalFormat.format(getSizePrice() + extraCheeseAmount() + extraSauceAmount()));
     }
 
     @Override
-    public String getToppingsAsString(){
-        String toppingsAsString = "";
-        for(int i = 0; i < this.toppings.size(); i ++){
-            if(i == this.toppings.size()-1) {
-                toppingsAsString += this.toppings.get(i).toString();
-            }
-            else {
-                toppingsAsString += this.toppings.get(i).toString() + ", ";
-            }
+    public String getToppingsAsString() {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (Topping topping : this.toppings) {
+            joiner.add(topping.toString());
         }
-        return toppingsAsString;
+        return joiner.toString();
     }
 
     @Override
-    public ArrayList<Topping> getToppings(){
+    public ArrayList<Topping> getToppings() {
         return this.toppings;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "[Pepperoni]" + "[" + getSizeAsString() + "]" + "[" + getSauceAsString() + "]: " + getToppingsAsString() + extraCheeseString() + extraSauceString() + ": " + "$" + price();
     }
 }
